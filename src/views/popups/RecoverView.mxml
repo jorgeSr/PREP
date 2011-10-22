@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SkinnablePopUpContainer xmlns:fx="http://ns.adobe.com/mxml/2009"
+						   xmlns:s="library://ns.adobe.com/flex/spark"
+						   width="456" height="246" 
+						   creationComplete="PopUpManager.centerPopUp(this)"
+							xmlns:popups="views.popups.*">
+	<fx:Declarations>
+		<s:RemoteObject id="usrR" destination="zend" source="userC" fault="usrR_faultHandler(event)">
+			<s:method name="forwardData" result="fw_resultHandler(event)"/>
+		</s:RemoteObject>
+		
+		<popups:AlertPopUp id="alert" open="this.enabled = false" close="this.enabled = true" />
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[			
+			import as3.pojos.User;
+			
+			import mx.managers.PopUpManager;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			protected function usrR_faultHandler(event:FaultEvent):void
+			{
+				cerrar();
+				showMessage( event.fault.faultString, "Error" );
+			}
+			
+			protected function fw_resultHandler(event:ResultEvent):void
+			{
+				if( event.result == true )
+					showMessage( "Se han enviado los datos a su correo", "Listo" );
+				else
+					showMessage( event.result as String, "Error" );
+				
+				cerrar();
+			}	
+			
+			protected function showMessage( msg:String, tit:String = "Alerta" ):void
+			{
+				alert.title = tit;
+				alert.content = msg;
+				alert.open( this );	
+			}
+			
+			protected function cerrar():void
+			{
+				this.ti.text = "";
+				this.close();	
+			}
+			
+			protected function rec_clickHandler(event:MouseEvent):void
+			{
+				if( ti.text == "" )
+				{
+					err.visible = true;
+				}
+				else
+				{
+					err.visible = false;
+					var usr:User = new User();
+					if( ti.text.indexOf("@") == -1)
+					{
+						usr.user = ti.text;
+						usr.email = " ";
+					}
+					else
+					{
+						usr.user = " ";
+						usr.email = ti.text;
+					}
+					usrR.forwardData(usr);
+				}
+			}
+			
+		]]>
+	</fx:Script>
+	<s:Label y="10" width="97%" height="74" backgroundAlpha="0.8" backgroundColor="#DCD7D3"
+			 fontSize="30" horizontalCenter="0" text="  Ingrese su:&#xd;   Usuario o email"
+			 verticalAlign="middle"/>
+	<s:Button bottom="16" height="44" label="Recuperar" 
+			  fontSize="20" horizontalCenter="138"
+			  click="rec_clickHandler(event)"/>
+	<s:Button x="400" y="17" width="43" height="40" label="X" fontSize="20" click="cerrar()"/>
+	<s:TextInput id="ti" y="112" width="95%" height="50" horizontalCenter="0"/>
+	<s:Label id="err" visible="false" x="15" y="213" color="#E55454" fontSize="20" text="Debe llenar el campo"/>
+	
+</s:SkinnablePopUpContainer>

@@ -1,0 +1,12 @@
+/* CSS file */
+@namespace s "library://ns.adobe.com/flex/spark";
+
+
+global
+{
+	selection-color: #7A7171;
+	font-size: 40;
+	color: #484242;
+	font-weight: bold;
+}
+	

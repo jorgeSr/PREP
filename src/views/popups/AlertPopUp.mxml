@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SkinnablePopUpContainer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+						   xmlns:s="library://ns.adobe.com/flex/spark" creationComplete="PopUpManager.centerPopUp(this)">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:TitleWindow close="close()" fontSize="20" horizontalCenter="0" title="{title}"
+				   verticalCenter="0">
+		<s:VGroup paddingTop="8" paddingBottom="8" paddingLeft="8" paddingRight="8" horizontalAlign="center">
+			<s:TextArea borderVisible="false" editable="false" fontSize="25" text="{content}"/>
+			<s:Button label="Cerrar" click="this.close()" fontSize="25"/>
+		</s:VGroup>
+	</s:TitleWindow>
+		
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.managers.PopUpManager;
+			[Bindable]
+			public var content:String;
+			[Bindable]
+			public var title:String;
+		]]>
+	</fx:Script>
+</s:SkinnablePopUpContainer>

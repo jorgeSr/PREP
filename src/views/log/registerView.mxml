@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009"
+		xmlns:s="library://ns.adobe.com/flex/spark"
+		actionBarVisible="true" backgroundAlpha="0.8" backgroundColor="#EAC26B" fontSize="30"
+		tabBarVisible="false" title="Nuevo Usuario" xmlns:popups="views.popups.*">
+	
+	<fx:Script>
+		<![CDATA[
+			import as3.pojos.User;
+			
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			protected function reg_clickHandler(event:MouseEvent):void
+			{
+				if(validate())
+				{
+					//Veficar Primero VALIDATORS
+					var usr:User = new User();
+					usr.email = tiEmail.text;
+					usr.user = tiUsr.text;
+					usr.pass = tiPass1.text;
+					
+					usrR.createUser(usr);
+				}
+			}
+			
+			protected function validate():Boolean
+			{
+				if( tiPass1.text != tiPass2.text )
+				{
+					showMessage( "Los Pass no coinciden", "Error" );
+					return false;
+				}
+				else if( tiEmail.text == "" || tiUsr.text == "" || tiPass1.text == "" )
+				{
+					showMessage( "Debe llenar todos los campos", "Error" );
+					return false;
+				}
+				
+				return true;
+			}
+			
+			protected function showMessage( msg:String, tit:String = "Alerta" ):void
+			{
+				alert.title = tit;
+				alert.content = msg;
+				alert.open( this );	
+			}
+			
+			protected function reg_resultHandler(event:ResultEvent):void
+			{
+				if( event.result == true )
+				{
+					showMessage( "Listo, sus datos se han enviado a su email", "Listo" );
+					navigator.popView();
+				}
+				else
+				{
+					showMessage( event.result as String, "Error" );
+				}
+			}
+			
+			protected function reg_faultHandler(event:FaultEvent):void
+			{
+				showMessage( event.fault.faultString as String, "Error" );
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:actionContent>
+		<s:Button label="login" fontSize="25" click="navigator.popView()"/>
+	</s:actionContent>
+	
+	<s:Rect x="0" y="0" width="{this.width}" height="{this.height}">
+		<s:fill>
+			<s:LinearGradient rotation="90">
+				<s:GradientEntry color="#efefef" alpha="0"/>
+				<s:GradientEntry color="#ffffff" alpha="0.2"/>
+			</s:LinearGradient>
+		</s:fill>
+	</s:Rect>
+	
+	<s:TextInput id="tiUsr" y="109" height="50" horizontalCenter="0"/>
+	<s:TextInput id="tiPass1" y="217" height="50" displayAsPassword="true" horizontalCenter="0"/>
+	<s:TextInput id="tiPass2" y="324" height="50" displayAsPassword="true" horizontalCenter="0"/>
+	<s:TextInput id="tiEmail" y="430" height="50" horizontalCenter="0"/>
+	
+	<s:Label x="22" y="393" text="e-mail"/>
+	<s:Label x="21" y="287" text="Repetir Pass"/>
+	<s:Label x="20" y="72" text="Usuario"/>
+	<s:Label x="21" y="180" text="Pass"/>
+	<s:Label x="0" y="0" width="100%" height="40" backgroundAlpha="0.4" backgroundColor="#F8F7F6"
+			 color="#362A20" fontSize="25" text="llene todos los campos" textAlign="center" verticalAlign="middle"/>
+	
+	<s:Button y="700" width="95%" height="92" label="Registrar" chromeColor="#DDCCD1"
+			  horizontalCenter="1" click="reg_clickHandler(event)"/>
+	
+	<fx:Declarations>
+		<s:RemoteObject id="usrR" destination="zend" source="userC" fault="reg_faultHandler(event)">
+			<s:method name="createUser" result="reg_resultHandler(event)"/>
+		</s:RemoteObject>
+		
+		<popups:AlertPopUp id="alert" open="this.enabled = false" 
+						   close="this.enabled = true" />
+	</fx:Declarations>
+	
+</s:View>
