@@ -41,20 +41,23 @@
 	
 	<s:Label x="0" top="0" width="100%" height="55" backgroundAlpha="0.8" backgroundColor="#F7F7F7"
 			 text="Periodos" textAlign="center" verticalAlign="middle"/>
-	<s:Button y="530" width="141" height="90" label="Crear" horizontalCenter="-160" click=" navigator.pushView( NewTransaction )"/>
-	<s:Button y="530" width="141" height="90" label="Edit" horizontalCenter="0"/>
+	<s:Button y="530" width="141" height="90" click=" navigator.pushView( NewTransaction )"
+			  horizontalCenter="-160" icon="@Embed('assets/add.png')"/>
+	<s:Button y="530" width="141" height="90" horizontalCenter="0" icon="@Embed('assets/edi.png')"/>
 	<s:Button y="530" width="141" height="90" label="Ver" horizontalCenter="160"/>
 	
 	<s:Label x="0" top="224" width="100%" height="55" backgroundAlpha="0.8" backgroundColor="#F7F7F7"
 			 text="Categorias" textAlign="center" verticalAlign="middle"/>
-	<s:Button y="302" width="141" height="90" label="Crear" horizontalCenter="-160" click=" navigator.pushView( NewCategory )"/>
-	<s:Button y="302" width="141" height="90" label="Edit" horizontalCenter="0"/>
+	<s:Button y="302" width="141" height="90" click=" navigator.pushView( NewCategory )"
+			  horizontalCenter="-160" icon="@Embed('assets/add.png')"/>
+	<s:Button y="302" width="141" height="90" horizontalCenter="0" icon="@Embed('assets/edi.png')"/>
 	<s:Button y="302" width="141" height="90" label="Ver" horizontalCenter="160"/>
 
 	<s:Label x="0" top="451" width="100%" height="55" backgroundAlpha="0.8" backgroundColor="#F7F7F7"
 			 text="Transacciones" textAlign="center" verticalAlign="middle"/>
-	<s:Button y="77" width="141" height="90" label="Crear" horizontalCenter="-160" click="usrR.hello(),navigator.pushView( NewPeriod )"/>
-	<s:Button y="77" width="141" height="90" label="Edit" horizontalCenter="0"/>
+	<s:Button y="77" width="141" height="90" click="usrR.hello(),navigator.pushView( NewPeriod )"
+			  horizontalCenter="-160" icon="@Embed('assets/add.png')"/>
+	<s:Button y="77" width="141" height="90" horizontalCenter="0" icon="@Embed('assets/edi.png')"/>
 	<s:Button y="77" width="141" height="90" label="Ver" horizontalCenter="160"/>
 	
 	<fx:Declarations>

@@ -24,10 +24,11 @@
 			 text="  Transacciones Fijas" verticalAlign="middle"/>
 	<s:TextInput id="tiUsr" y="67" width="90%" height="60" horizontalCenter="0" editable="false"/>
 	<s:TextInput id="tiUsr0" y="241" width="90%" height="60" horizontalCenter="0" editable="false"/>
-	<s:Button y="414" width="130" height="90" label="+" horizontalCenter="-155" click=" navigator.pushView( NewTransaction, true)"/>
-	<s:Button y="414" width="130" height="90" label="-" horizontalCenter="0"/>
-	<s:Button y="414" width="130" height="90" label="ver" horizontalCenter="155"/>
-	<s:Button y="618" width="90%" height="100" label="Crear Periodo" horizontalCenter="0"/>
+	<s:Button y="414" width="130" height="80" click=" navigator.pushView( NewTransaction, true)"
+			  horizontalCenter="-155" icon="@Embed('assets/add.png')"/>
+	<s:Button y="414" width="130" height="80" horizontalCenter="0" icon="@Embed('assets/del.png')"/>
+	<s:Button y="414" width="130" height="80" horizontalCenter="155" icon="@Embed('assets/see.png')"/>
+	<s:Button y="670" width="90%" height="75" label="Crear Periodo" horizontalCenter="0"/>
 	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->

@@ -16,13 +16,17 @@
 			
 			protected function log_clickHandler(event:MouseEvent):void
 			{	
-				//se crea el objeto usuario
-				var user:User = new User();
-				user.user = tiUsr.text;
-				user.pass = tiPass.text;
-				//se envia el objeto
-				usrR.logIn( user );
-				//usrR.hello();
+				if( tiUsr.text != "" && tiPass.text != "" )
+				{
+					//se crea el objeto usuario
+					var user:User = new User();
+					user.user = tiUsr.text;
+					user.pass = tiPass.text;
+					//se envia el objeto
+					usrR.logIn( user );
+				}
+				else
+					showMessage( "Indique su Usuario y Pass¡ " );
 			}
 			
 			protected function login_resultHandler(event:ResultEvent):void
@@ -102,6 +106,6 @@
 	<s:TextInput id="tiUsr" y="123" width="90%" height="49" horizontalCenter="0"/>
 	<s:TextInput id="tiPass" y="236" width="90%" height="49" displayAsPassword="true"
 				 horizontalCenter="-3"/>
-	<s:Button y="334" width="95%" height="92" label="Accesar" chromeColor="#DDCCD1"
-			  click="log_clickHandler(event)" horizontalCenter="1"/>
+	<s:Button y="334" width="95%" height="92" label="Accesar" click="log_clickHandler(event)"
+			  horizontalCenter="1"/>
 </s:View>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:SkinnablePopUpContainer xmlns:fx="http://ns.adobe.com/mxml/2009"
 						   xmlns:s="library://ns.adobe.com/flex/spark"
-						   width="456" height="246" 
+						   width="456" height="270" 
 						   creationComplete="PopUpManager.centerPopUp(this)"
 							xmlns:popups="views.popups.*">
 	<fx:Declarations>
@@ -78,10 +78,9 @@
 	<s:Label y="10" width="97%" height="74" backgroundAlpha="0.8" backgroundColor="#DCD7D3"
 			 fontSize="30" horizontalCenter="0" text="  Ingrese su:&#xd;   Usuario o email"
 			 verticalAlign="middle"/>
-	<s:Button bottom="16" height="44" label="Recuperar" 
-			  fontSize="20" horizontalCenter="138"
-			  click="rec_clickHandler(event)"/>
-	<s:Button x="400" y="17" width="43" height="40" label="X" fontSize="20" click="cerrar()"/>
+	<s:Button bottom="16" width="187" height="60" label="Recuperar" click="rec_clickHandler(event)"
+			  fontSize="25" horizontalCenter="116"/>
+	<s:Button x="390" y="17" width="53" height="49" label="X" fontSize="20" click="cerrar()"/>
 	<s:TextInput id="ti" y="112" width="95%" height="50" horizontalCenter="0"/>
 	<s:Label id="err" visible="false" x="15" y="213" color="#E55454" fontSize="20" text="Debe llenar el campo"/>
 	
