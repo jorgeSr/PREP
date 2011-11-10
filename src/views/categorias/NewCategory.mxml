@@ -1,7 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" title="Nueva Categoria"
-		backgroundAlpha="0.8" backgroundColor="#EAC26B">
+		backgroundAlpha="0.8" backgroundColor="#EAC26B" xmlns:popups="views.popups.*">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.ItemClickEvent;
+			public var type:int = 0;
+			public var ideal:int = 0;
+			
+			protected function typeItemClickH(event:ItemClickEvent):void
+			{
+				type = event.currentTarget.selectedValue as Number;
+			}
+			
+			protected function idealItemClickH(event:ItemClickEvent):void
+			{
+				ideal = event.currentTarget.selectedValue as Number;
+				tiCant.text = "";
+				tiCant.enabled = ideal == 0 ? false:true; 
+			}
+			
+			protected function process(event:MouseEvent):void
+			{
+				//Aqui se verifican las netradas y si son correctas se llama al obj remoto
+				if( verify() )
+				{
+					
+				}
+				else
+				{
+					
+				}
+			}
+			
+			protected function verify():Boolean
+			{
+				if( ideal != 0 )
+				{
+					return (tiCant.text != "" && tiNom.text != "" ) ? true:false;   
+				}
+				return tiNom.text != "" ? true:false;
+			}
+			
+		]]>
+	</fx:Script>
 	
 	<s:Rect x="0" y="0" width="{this.width}" height="{this.height}">
 		<s:fill>
@@ -12,7 +54,7 @@
 		</s:fill>
 	</s:Rect>
 	
-	<s:Button y="685" width="90%" height="75" label="Crear Categoria" horizontalCenter="-2"/>
+	
 	<s:Scroller x="10" y="25" width="95%" height="640">
 		<s:VGroup width="100%" height="100%">
 			
@@ -23,31 +65,45 @@
 					 verticalAlign="middle"/>
 			<s:Label width="100%" height="58" backgroundAlpha="0.5" backgroundColor="#FAFAFA" text="  Tipo"
 					 verticalAlign="middle"/>
+			
 			<s:VGroup width="306">
-				<s:RadioButton width="90%" label="Salida" fontSize="30" group="{itype}" selected="true"
+				<s:RadioButton width="90%" label="Salida" fontSize="30" group="{ttype}" selected="true"
 							   value="0"/>
-				<s:RadioButton width="90%" label="Entrada" fontSize="30" group="{itype}" value="1"/>
-				<s:RadioButton width="90%" label="Ahorro" fontSize="30" group="{itype}" value="2"/>        
+				<s:RadioButton width="90%" label="Entrada" fontSize="30" group="{ttype}" value="1"/>
+				<s:RadioButton width="90%" label="Ahorro" fontSize="30" group="{ttype}" value="2"/>        
 			</s:VGroup>
+			
 			<s:Label width="100%" height="34" backgroundAlpha="0" backgroundColor="#FAFAFA"
 					 verticalAlign="middle"/>
 			<s:Label width="100%" height="58" backgroundAlpha="0.5" backgroundColor="#FAFAFA"
 					 text="  Cantidad Ideal" verticalAlign="middle"/>
+			
 			<s:VGroup width="306">
-				<s:RadioButton width="90%" label="Auto" fontSize="30" group="{ttype}" selected="true"
+				<s:RadioButton width="90%" label="Auto" fontSize="30" group="{itype}" selected="true"
 							   value="0"/>
-				<s:RadioButton width="90%" label="Cantidad" fontSize="30" group="{ttype}" value="1"/>
-				<s:RadioButton width="90%" label="Porcentaje" fontSize="30" group="{ttype}" value="2"/>        
+				<s:RadioButton width="90%" label="Cantidad" fontSize="30" group="{itype}" value="1"/>
+				<s:RadioButton width="90%" label="Porcentaje" fontSize="30" group="{itype}" value="2"/>        
 			</s:VGroup>
+			
 			<s:Label width="100%" height="34" backgroundAlpha="0" backgroundColor="#FAFAFA"
 					 verticalAlign="middle"/>
 			<s:Label width="100%" height="34" fontSize="30" text="Cantidad" verticalAlign="middle"/>
-			<s:TextInput id="tiCant" width="100%" height="50" enabled="false"/>
-			
+			<s:TextInput id="tiCant" restrict="[0-9]" width="100%" height="50" enabled="false"/>
+
+			<s:Label width="100%" height="34" backgroundAlpha="0" backgroundColor="#FAFAFA"
+					 verticalAlign="middle"/>
+			<s:Label width="100%" height="58" backgroundAlpha="0.5" backgroundColor="#FAFAFA" text="Comentario"
+					 verticalAlign="middle"/>
+			<s:TextArea width="100%" height="100"/>
 		</s:VGroup>
 	</s:Scroller>
+	
+	<s:Button y="685" width="90%" height="75" label="Crear Categoria" horizontalCenter="-2"
+			  click="process(event)"/>
+	
 	<fx:Declarations>
-		<s:RadioButtonGroup id="ttype"/>
-		<s:RadioButtonGroup id="itype"/>
+		<s:RadioButtonGroup id="ttype" itemClick="typeItemClickH(event)"/>
+		<s:RadioButtonGroup id="itype" itemClick="idealItemClickH(event)"/>
+		<popups:AlertPopUp id="pop" />
 	</fx:Declarations>
 </s:View>
