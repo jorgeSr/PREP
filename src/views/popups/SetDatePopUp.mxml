@@ -6,10 +6,10 @@
 	<s:TitleWindow width="451" height="403" close="close()" horizontalCenter="0" title="Confirmar Fecha"
 				   verticalCenter="0">
 
-				<s:Button x="11" y="285" width="170" label="OK" click="dispatchEvent(new Event('ok'))"
-						  fontSize="30"/>
-				<s:Button x="271" y="289" width="170" label="Cancelar"
-						  click="dispatchEvent(new Event('no'))" fontSize="30"/>
+				<s:Button x="11" y="285" width="170" height="67" label="OK"
+						  click="dispatchEvent(new Event('okDate'))" fontSize="30"/>
+				<s:Button x="271" y="289" width="170" height="63" label="Cancelar"
+						  click="dispatchEvent(new Event('noDate'))" fontSize="30"/>
 						
 			<s:Label x="1" y="90" width="100%" height="104" backgroundAlpha="0.5"
 					 backgroundColor="#D7AB9F" text="&#xd;"/>
@@ -40,8 +40,8 @@
 			
 	</s:TitleWindow>
 	<fx:Metadata> 
-		[Event(name="no", type="flash.events.Event")] 
-		[Event(name="ok", type="flash.events.Event")]
+		[Event(name="noDate", type="flash.events.Event")] 
+		[Event(name="okDate", type="flash.events.Event")]
 	</fx:Metadata>
 	
 	<fx:Script>
@@ -51,6 +51,7 @@
 			
 			[Bindable]
 			public var content:String;
+			public var extra:int = -1;
 			
 			protected function initPopUp(event:FlexEvent):void
 			{

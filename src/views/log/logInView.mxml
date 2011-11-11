@@ -45,6 +45,7 @@
 			
 			protected function myRemote_faultHandler(event:FaultEvent):void
 			{
+				navigator.pushView( MainMenuView );
 				showMessage( event.fault.faultString, "Error" );
 			}
 			
