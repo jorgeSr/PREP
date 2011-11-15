@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="Categorias" initialize="catR.findAll()" xmlns:popups="views.popups.*">
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			//Data.type = accion al hacer click ¡¡
+			
+			protected function initView(event:ResultEvent):void
+			{
+				//Pasa el dp a la lista
+				if( event.result != false )
+				{
+					list.dataProvider = new ArrayCollection( event.result as Array ); 
+				} 
+			}
+			
+			protected function catR_faultHandler(event:FaultEvent):void
+			{
+				var i:Object = event.fault;
+			}
+			
+			protected function clickHandler(event:MouseEvent):void
+			{	
+				if( list.selectedItem != undefined )
+					switch( data.type )
+					{
+						//1 .- Eliminar
+						case 1: cpop.content = "Esta seguro de eliminar la categoria: "+list.selectedItem.name;
+								cpop.open( this );
+							break;
+						//2 .- Editar
+						case 2: navigator.pushView( data.viewClass as Class , list.selectedItem );
+							break;
+						//2 .- Solo mostrar
+						case 3: 
+							break;
+					}
+			}
+			
+			protected function cpop_okHandler(event:Event):void
+			{
+				var idCat:int = list.selectedItem.id;
+				//Lamar a removeById()
+			}
+			
+			protected function cpop_noHandler(event:Event):void
+			{
+				event.target.close();
+			}
+			
+		]]>
+	</fx:Script>
+	<s:states>
+		<s:State name="State1"/>
+	</s:states>
+	
+	<fx:Declarations>
+		<popups:AlertPopUp id="apop" />
+		<popups:ConfirmPopUp id="cpop" ok="cpop_okHandler(event)" no="cpop_noHandler(event)"/>
+		
+		<s:RemoteObject id="catR" destination="zend" source="categoryC" fault="catR_faultHandler(event)">
+			<s:method name="findAll" result="initView(event)"/>
+		</s:RemoteObject>
+	</fx:Declarations>
+	
+	<s:List id="list" left="10" right="10" top="10" bottom="10" click="clickHandler(event)"
+			itemRenderer="views.categorias.CategoryItemRenderer"></s:List>
+</s:View>

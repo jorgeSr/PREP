@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="Categoria"
+		backgroundAlpha="0.8" backgroundColor="#EAC26B" xmlns:popups="views.popups.*" initialize="initView()">
+	<fx:Script>
+		<![CDATA[
+			import as3.pojos.Category;
+			
+			import mx.events.FlexEvent;
+			import mx.events.ItemClickEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			import views.MainMenuView;
+			public var type:int = 0;
+			public var ideal:int = 0;
+			private var newCat:Category = new Category()
+			
+			
+			protected function initView():void
+			{
+				if( data != null )
+				{
+					//Editar
+					proc.label = "Editar Categoria";
+					newCat.id = data.id;
+					newCat.comment = data.comment;
+					newCat.ideal = data.ideal;
+					ideal = newCat.idealType = data.idealType;
+					newCat.name = data.name;
+					type = newCat.type = data.type;
+					newCat.userId = data.userId;
+					
+					tiNom.text = newCat.name;
+					tiCant.text = newCat.ideal+"";
+					taCom.text = newCat.comment;
+					tiCant.enabled = ideal == 0 ? false:true;
+					
+					if( newCat.type == 0 )
+						tS.selected = true;
+					else if( newCat.type == 1 )
+						tE.selected = true;
+					else if( newCat.type == 2 )
+						tA.selected = true;
+					
+					if( newCat.idealType == 0 )
+					{
+						iA.selected = true;
+						tiCant.text = "";
+					}
+					else if( newCat.idealType == 1 )
+						iC.selected = true;
+					else if( newCat.idealType == 2 )
+						iP.selected = true;
+					 
+					
+					return;
+				}
+				
+				iA.selected = tS.selected = true;
+			}
+			
+			protected function typeItemClickH(event:ItemClickEvent):void
+			{
+				type = event.currentTarget.selectedValue as Number;
+			}
+			
+			protected function idealItemClickH(event:ItemClickEvent):void
+			{
+				ideal = event.currentTarget.selectedValue as Number;
+				tiCant.text = "";
+				tiCant.enabled = ideal == 0 ? false:true; 
+			}
+			
+			protected function process(event:MouseEvent):void
+			{
+				//Aqui se verifican las netradas y si son correctas se llama al obj remoto
+				if( verify() )
+				{
+					//el id del usuario se agrega del lado del servidor por razones de seguridad
+					newCat.name = tiNom.text;
+					newCat.type = type;
+					newCat.idealType = ideal;
+					newCat.ideal = int( tiCant.text );
+					newCat.comment = taCom.text;
+					
+					if( data == null )
+						catR.create( newCat );
+					else
+						catR.update( newCat );
+				}
+				else
+				{
+					pop.title = "Error de entradas";
+					pop.content = "Debe llenar los campos nombre e indicar la cantidad o porcentaje ideal si no selecciono auto¡"
+					pop.open( this );
+				}
+			}
+			
+			protected function verify():Boolean
+			{
+				if( ideal != 0 )
+				{
+					return (tiCant.text != "" && tiNom.text != "" ) ? true:false;   
+				}
+				return tiNom.text != "" ? true:false;
+			}
+			
+			protected function resultHandler(event:ResultEvent):void
+			{
+				//Se creo la categoria
+				pop.title = "Listo";
+				pop.content = "Categoria "+(data == null ? "creada":"actualizada")+" satisfactoriamente ¡ ";
+				pop.open( this );
+				navigator.pushView( MainMenuView );
+			}
+			
+			protected function catR_faultHandler(event:FaultEvent):void
+			{
+				pop.content = "Error al "+(data == null ? "crear":"actualizar")+" la categoria en el servidor: "+event.fault.faultString;
+				pop.open( this );
+			}
+			
+			
+			
+		]]>
+	</fx:Script>
+	
+	<s:Rect x="0" y="0" width="{this.width}" height="{this.height}">
+		<s:fill>
+			<s:LinearGradient rotation="90">
+				<s:GradientEntry color="#efefef" alpha="0"/>
+				<s:GradientEntry color="#ffffff" alpha="0.2"/>
+			</s:LinearGradient>
+		</s:fill>
+	</s:Rect>
+	
+	
+	<s:Scroller x="10" y="25" width="95%" height="640">
+		<s:VGroup width="100%" height="100%">
+			
+			<s:Label width="100%" height="58" backgroundAlpha="0.5" backgroundColor="#FAFAFA" text="  Nombre"
+					 verticalAlign="middle"/>
+			<s:TextInput id="tiNom" width="100%" height="50"/>
+			<s:Label width="100%" height="34" backgroundAlpha="0" backgroundColor="#FAFAFA"
+					 verticalAlign="middle"/>
+			<s:Label width="100%" height="58" backgroundAlpha="0.5" backgroundColor="#FAFAFA" text="  Tipo"
+					 verticalAlign="middle"/>
+			
+			<s:VGroup width="306">
+				<s:RadioButton id="tS" width="90%" label="Salida" fontSize="30" group="{ttype}" value="0"/>
+				<s:RadioButton id="tE" width="90%" label="Entrada" fontSize="30" group="{ttype}" value="1"/>
+				<s:RadioButton id="tA" width="90%" label="Ahorro" fontSize="30" group="{ttype}" value="2"/>        
+			</s:VGroup>
+			
+			<s:Label width="100%" height="34" backgroundAlpha="0" backgroundColor="#FAFAFA"
+					 verticalAlign="middle"/>
+			<s:Label width="100%" height="58" backgroundAlpha="0.5" backgroundColor="#FAFAFA"
+					 text="  Cantidad Ideal" verticalAlign="middle"/>
+			
+			<s:VGroup width="306">
+				<s:RadioButton id="iA" width="90%" label="Auto" fontSize="30" group="{itype}" value="0"/>
+				<s:RadioButton id="iC" width="90%" label="Cantidad" fontSize="30" group="{itype}" value="1"/>
+				<s:RadioButton id="iP" width="90%" label="Porcentaje" fontSize="30" group="{itype}" value="2"/>        
+			</s:VGroup>
+			
+			<s:Label width="100%" height="34" backgroundAlpha="0" backgroundColor="#FAFAFA"
+					 verticalAlign="middle"/>
+			<s:Label width="100%" height="34" fontSize="30" text="Cantidad" verticalAlign="middle"/>
+			<s:TextInput id="tiCant" restrict="[0-9]" width="100%" height="50" enabled="false"/>
+
+			<s:Label width="100%" height="34" backgroundAlpha="0" backgroundColor="#FAFAFA"
+					 verticalAlign="middle"/>
+			<s:Label width="100%" height="58" backgroundAlpha="0.5" backgroundColor="#FAFAFA" text="Comentario"
+					 verticalAlign="middle"/>
+			<s:TextArea id="taCom" width="100%" height="100"/>
+		</s:VGroup>
+	</s:Scroller>
+	
+	<s:Button y="685" width="90%" height="75" label="Crear Categoria" horizontalCenter="-2" id="proc"
+			  click="process(event)"/>
+	
+	<fx:Declarations>
+		<s:RadioButtonGroup id="ttype" itemClick="typeItemClickH(event)"/>
+		<s:RadioButtonGroup id="itype" itemClick="idealItemClickH(event)"/>
+		<popups:AlertPopUp id="pop" open="this.enabled = tabBarVisible = false" close="this.enabled = tabBarVisible = true"/>
+		
+		<s:RemoteObject id="catR" destination="zend" source="categoryC" fault="catR_faultHandler(event)" result="resultHandler(event)">
+			<s:method name="create" />
+			<s:method name="update" />
+		</s:RemoteObject>
+	</fx:Declarations>
+</s:View>

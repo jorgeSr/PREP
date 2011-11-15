@@ -7,14 +7,10 @@
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			
-			import views.categorias.NewCategory;
+			import views.categorias.CotegoryList;
+			import views.categorias.NewEditCategory;
 			import views.periodos.NewPeriod;
 			import views.transacciones.NewTransaction;
-			
-			protected function myRemote_faultHandler(event:FaultEvent):void
-			{
-				showMessage( event.fault.faultString, "Error" );
-			}
 			
 			protected function showMessage( msg:String, tit:String = "Alerta" ):void
 			{
@@ -23,9 +19,12 @@
 				alert.open( this );	
 			}
 			
-			protected function hello_resultHandler(event:ResultEvent):void
+			protected function eCat_clickHandler(event:MouseEvent):void
 			{
-				showMessage( event.result.toString(), "Alert" );
+				var obj:Object = new Object;
+				obj.viewClass = NewEditCategory;
+				obj.type = 2;
+				navigator.pushView( CotegoryList, obj )
 			}
 			
 		]]>
@@ -48,24 +47,20 @@
 	
 	<s:Label x="0" top="224" width="100%" height="55" backgroundAlpha="0.8" backgroundColor="#F7F7F7"
 			 text="Categorias" textAlign="center" verticalAlign="middle"/>
-	<s:Button y="302" width="141" height="90" click=" navigator.pushView( NewCategory )"
+	<s:Button y="302" width="141" height="90" click=" navigator.pushView( NewEditCategory )"
 			  horizontalCenter="-160" icon="@Embed('assets/add.png')"/>
-	<s:Button y="302" width="141" height="90" horizontalCenter="0" icon="@Embed('assets/edi.png')"/>
+	<s:Button y="302" width="141" height="90" horizontalCenter="0" icon="@Embed('assets/edi.png')"
+			  click="eCat_clickHandler(event)" />
 	<s:Button y="302" width="141" height="90" label="Ver" horizontalCenter="160"/>
 
 	<s:Label x="0" top="451" width="100%" height="55" backgroundAlpha="0.8" backgroundColor="#F7F7F7"
 			 text="Transacciones" textAlign="center" verticalAlign="middle"/>
-	<s:Button y="77" width="141" height="90" click="usrR.hello(),navigator.pushView( NewPeriod )"
+	<s:Button y="77" width="141" height="90" click="navigator.pushView( NewPeriod )"
 			  horizontalCenter="-160" icon="@Embed('assets/add.png')"/>
 	<s:Button y="77" width="141" height="90" horizontalCenter="0" icon="@Embed('assets/edi.png')"/>
 	<s:Button y="77" width="141" height="90" label="Ver" horizontalCenter="160"/>
 	
 	<fx:Declarations>
-		<s:RemoteObject id="usrR" destination="zend" source="categoryC" fault="myRemote_faultHandler(event)">
-			<!-- Just for Test -->
-			<s:method name="hello" result="hello_resultHandler(event)"/>
-		</s:RemoteObject>
-		
 		<popups:AlertPopUp id="alert" open="this.enabled = false" close="this.enabled = true" />
 	</fx:Declarations>
 </s:View>

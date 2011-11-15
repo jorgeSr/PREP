@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:IconItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					xmlns:s="library://ns.adobe.com/flex/spark" iconWidth="64" iconHeight="64" iconFillMode="scale" labelFunction="myLabelFunction"
+					iconFunction="setIcon" messageFunction="myMessageFunction" >
+	<fx:Script>
+		<![CDATA[
+			import as3.pojos.Category;
+			[Bindable]
+			[Embed(source="assets/pig.jpg")]
+			public var ahorro:Class;
+			[Bindable]
+			[Embed(source="assets/inflow.png")]
+			public var entrada:Class;
+			[Bindable]
+			[Embed(source="assets/outflow.png")]
+			public var salida:Class;
+			[Embed(source="assets/coin.png")]
+			public var coin:Class;
+			
+			override public function set data(value:Object):void {
+				super.data = value;
+				if (data == null) return;
+				setDecorator(value);
+			}
+			
+			private function setIcon(item:Object):Object {
+				switch(item.type){
+					case 0: return salida; break;
+					case 1: return entrada; break;
+					case 2: return ahorro; break;
+					default: return null;
+				}
+			}
+			
+			private function setDecorator(item:Object):void {
+				decorator = coin; 
+			}
+			
+			private function myLabelFunction(item:Object):String {
+				return item.name;
+			}
+			
+			private function myMessageFunction(item:Object):String {
+				switch(item.type){
+					case 0: return "Salida: "+item.comment; break;
+					case 1: return "Entrada: "+item.comment; break;
+					case 2: return "Ahorro: "+item.comment; break;
+					default: return null;
+				}
+			}
+		]]>
+	</fx:Script>
+</s:IconItemRenderer>

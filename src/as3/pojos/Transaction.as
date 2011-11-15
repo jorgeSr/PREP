@@ -8,7 +8,7 @@ package as3.pojos
 		public var userId:int;
 		public var categoryId:int;
 		public var periodId:int;
-		public var type:String;
+		public var type:int;  //0:SALIDA, 1:ENTRADA, 2:AHORRO
 		public var date:Date;
 		public var amount:Number;
 		public var detail:String;

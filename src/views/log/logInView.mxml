@@ -45,7 +45,6 @@
 			
 			protected function myRemote_faultHandler(event:FaultEvent):void
 			{
-				navigator.pushView( MainMenuView );
 				showMessage( event.fault.faultString, "Error" );
 			}
 			
@@ -68,8 +67,6 @@
 	<fx:Declarations>
 		<s:RemoteObject id="usrR" destination="zend" source="userC" fault="myRemote_faultHandler(event)">
 			<s:method name="logIn" result="login_resultHandler(event)"/>
-			<!-- Just for Test -->
-			<s:method name="hello" result="login_resultHandler(event)"/>
 		</s:RemoteObject>
 		
 		<popups:RecoverView id="fwPop" open="this.enabled = false" close="this.enabled = true"/>
@@ -105,9 +102,9 @@
 			 text="Registrarse" textAlign="center" textDecoration="none" verticalAlign="middle"
 			 click=" navigator.pushView( registerView )"/>
 	
-	<s:TextInput id="tiUsr" y="123" width="90%" height="49" horizontalCenter="0"/>
+	<s:TextInput id="tiUsr" y="123" width="90%" height="49" horizontalCenter="0" text="i"/>
 	<s:TextInput id="tiPass" y="236" width="90%" height="49" displayAsPassword="true"
-				 horizontalCenter="-3"/>
+				 horizontalCenter="-3" text="i"/>
 	<s:Button y="334" width="95%" height="92" label="Accesar" click="log_clickHandler(event)"
 			  horizontalCenter="1"/>
 </s:View>
