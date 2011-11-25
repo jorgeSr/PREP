@@ -16,7 +16,7 @@
 	
     <channels>
         <channel-definition id="my-zend" class="mx.messaging.channels.AMFChannel">
-            <endpoint uri="http://relojesomega.com.mx/prepZend/gateway.php" class="flex.messaging.endpoints.AMFEndpoint"/>
+            <endpoint uri="http://localhost/prepZend/gateway.php" class="flex.messaging.endpoints.AMFEndpoint"/>
         </channel-definition>
     </channels>
 </services-config>
