@@ -4,15 +4,16 @@
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	<s:TitleWindow close="close()" horizontalCenter="0" title="Confirmar" verticalCenter="0">
-		<s:VGroup paddingTop="8" paddingBottom="8" paddingLeft="8" paddingRight="8" horizontalAlign="center">
-			<s:TextArea editable="false" text="{content}" borderVisible="false"/>
-			<s:HGroup width="100%" columnWidth="121" gap="65" requestedColumnCount="2"
-					  variableColumnWidth="false" verticalAlign="middle">
-				<s:Button label="OK" click="dispatchEvent(new Event('ok'))"/>
-				<s:Button label="NO" click="dispatchEvent(new Event('no'))"/>
-			</s:HGroup>			
-		</s:VGroup>
+	<s:TitleWindow width="423" height="332" close="close()" horizontalCenter="0" title="Confirmar"
+				   verticalCenter="0">
+		
+			<s:Label x="28" y="10" width="371" height="197" backgroundColor="#F4F4F4" fontSize="25"
+					 fontWeight="normal" text="{content}" textAlign="center" verticalAlign="middle"/>
+		<s:Button x="245" y="221" width="152" label="NO" click="this.close()"/>
+		<s:Button x="28" y="221" width="156" label="OK"
+				  click="dispatchEvent(new Event('ok')), this.close()"/>
+						
+		
 	</s:TitleWindow>
 	<fx:Metadata> 
 		[Event(name="no", type="flash.events.Event")] 

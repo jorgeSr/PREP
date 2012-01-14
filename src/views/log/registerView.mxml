@@ -81,10 +81,10 @@
 		</s:fill>
 	</s:Rect>
 	
-	<s:TextInput id="tiUsr" y="109" height="50" horizontalCenter="0"/>
-	<s:TextInput id="tiPass1" y="217" height="50" displayAsPassword="true" horizontalCenter="0"/>
-	<s:TextInput id="tiPass2" y="324" height="50" displayAsPassword="true" horizontalCenter="0"/>
-	<s:TextInput id="tiEmail" y="430" height="50" horizontalCenter="0"/>
+	<s:TextInput id="tiUsr" y="109" left="20" right="20" />
+	<s:TextInput id="tiPass1" y="217" left="20" right="20" displayAsPassword="true" />
+	<s:TextInput id="tiPass2" y="324" left="20" right="20" displayAsPassword="true" />
+	<s:TextInput id="tiEmail" y="430" left="20" right="20" />
 	
 	<s:Label x="22" y="393" text="e-mail"/>
 	<s:Label x="21" y="287" text="Repetir Pass"/>

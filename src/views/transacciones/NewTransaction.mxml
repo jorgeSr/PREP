@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" title="Nueva Transacción"
-		backgroundAlpha="0.8" backgroundColor="#EAC26B">
+		backgroundAlpha="0.8" backgroundColor="#EAC26B" creationComplete="view1_creationCompleteHandler(event)">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			protected function view1_creationCompleteHandler(event:FlexEvent):void
+			{
+				fechas.text = "Fechas: ";
+			}
+			
+		]]>
+	</fx:Script>
 	
 	<s:Rect x="0" y="0" width="{this.width}" height="{this.height}">
 		<s:fill>
@@ -12,19 +23,19 @@
 		</s:fill>
 	</s:Rect>
 	
-	<s:Label x="2" y="1" width="100%" height="51" backgroundColor="#EAE1D9" text="Periodo"
-			 textAlign="center" verticalAlign="middle"/>
+	<s:Label x="2" y="1" width="100%" height="51" backgroundColor="#EAE1D9" fontWeight="bold"
+			 text="Periodo" textAlign="center" verticalAlign="middle"/>
 	<s:Label x="2" y="52" width="100%" height="38" backgroundAlpha="0.5" backgroundColor="#EAE1D9"
-			 color="#664316" fontSize="25" text="Fechas:" textAlign="center" verticalAlign="middle"/>
+			 color="#664316" fontSize="25" id="fechas" textAlign="center" verticalAlign="middle"/>
 	<s:Label x="19" y="135" fontSize="30" text="Categoria"/>
 	<s:Label x="18" y="203" fontSize="30" text="Detalle"/>
 	<s:Label x="18" y="270" fontSize="30" text="Cantidad"/>
-	<s:TextInput id="tiUsr1" y="261" width="60%" height="49" horizontalCenter="80"/>
-	<s:TextInput id="tiUsr3" y="128" width="60%" height="49" horizontalCenter="80" editable="false"/>
-	<s:TextInput id="tiUsr0" y="195" width="60%" height="49" horizontalCenter="80"/>
-	<s:TextInput id="tiUsr2" y="326" width="60%" height="49" editable="false" horizontalCenter="80"/>
+	<s:TextInput id="tiUsr1" y="255" left="170" right="20"/>
+	<s:TextInput id="tiUsr3" y="122" left="170" right="20" editable="false"/>
+	<s:TextInput id="tiUsr0" y="189" left="170" right="20"/>
+	<s:TextInput id="tiUsr2" y="320" left="170" right="20" editable="false"/>
 	<s:Label x="21" y="337" fontSize="30" text="Fecha"/>
-	<s:Label x="24" y="404" fontSize="30" text="Tipo:"/>
+	<s:Label x="24" y="404" fontSize="30" fontWeight="bold" text="Tipo:"/>
 	<s:VGroup left="55" right="161" top="448" height="127">
 		<s:RadioButton width="90%" label="Salida" color="#5A4B4B" fontSize="30" group="{ttype}"
 					   selected="true" value="0"/>
@@ -33,7 +44,7 @@
 		<s:RadioButton width="90%" label="Ahorro" color="#5A4B4B" fontSize="30" group="{ttype}"
 					   value="2"/>        
 	</s:VGroup>
-	<s:Button y="640" width="90%" height="100" label="Crear Transacción" horizontalCenter="0"/>
+	<s:Button left="20" right="20" bottom="20" height="75" label="Crear Transacción" fontSize="25"/>
 	<fx:Declarations>
 		<s:RadioButtonGroup id="ttype"/>
 	</fx:Declarations>

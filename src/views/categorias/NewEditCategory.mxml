@@ -21,6 +21,7 @@
 			{
 				if( data != null )
 				{
+					btnDel.visible = true;
 					//Editar
 					proc.label = "Editar Categoria";
 					newCat.id = data.id;
@@ -126,6 +127,10 @@
 		]]>
 	</fx:Script>
 	
+	<s:actionContent>
+		<s:Button icon="@Embed('assets/del.png')" visible="false" id="btnDel"/>
+	</s:actionContent>
+	
 	<s:Rect x="0" y="0" width="{this.width}" height="{this.height}">
 		<s:fill>
 			<s:LinearGradient rotation="90">
@@ -136,49 +141,40 @@
 	</s:Rect>
 	
 	
-	<s:Scroller x="10" y="25" width="95%" height="640">
-		<s:VGroup width="100%" height="100%">
-			
-			<s:Label width="100%" height="58" backgroundAlpha="0.5" backgroundColor="#FAFAFA" text="  Nombre"
-					 verticalAlign="middle"/>
-			<s:TextInput id="tiNom" width="100%" height="50"/>
-			<s:Label width="100%" height="34" backgroundAlpha="0" backgroundColor="#FAFAFA"
-					 verticalAlign="middle"/>
-			<s:Label width="100%" height="58" backgroundAlpha="0.5" backgroundColor="#FAFAFA" text="  Tipo"
-					 verticalAlign="middle"/>
-			
-			<s:VGroup width="306">
-				<s:RadioButton id="tS" width="90%" label="Salida" fontSize="30" group="{ttype}" value="0"/>
-				<s:RadioButton id="tE" width="90%" label="Entrada" fontSize="30" group="{ttype}" value="1"/>
-				<s:RadioButton id="tA" width="90%" label="Ahorro" fontSize="30" group="{ttype}" value="2"/>        
-			</s:VGroup>
-			
-			<s:Label width="100%" height="34" backgroundAlpha="0" backgroundColor="#FAFAFA"
-					 verticalAlign="middle"/>
-			<s:Label width="100%" height="58" backgroundAlpha="0.5" backgroundColor="#FAFAFA"
-					 text="  Cantidad Ideal" verticalAlign="middle"/>
-			
-			<s:VGroup width="306">
-				<s:RadioButton id="iA" width="90%" label="Auto" fontSize="30" group="{itype}" value="0"/>
-				<s:RadioButton id="iC" width="90%" label="Cantidad" fontSize="30" group="{itype}" value="1"/>
-				<s:RadioButton id="iP" width="90%" label="Porcentaje" fontSize="30" group="{itype}" value="2"/>        
-			</s:VGroup>
-			
-			<s:Label width="100%" height="34" backgroundAlpha="0" backgroundColor="#FAFAFA"
-					 verticalAlign="middle"/>
-			<s:Label width="100%" height="34" fontSize="30" text="Cantidad" verticalAlign="middle"/>
-			<s:TextInput id="tiCant" restrict="[0-9]" width="100%" height="50" enabled="false"/>
-
-			<s:Label width="100%" height="34" backgroundAlpha="0" backgroundColor="#FAFAFA"
-					 verticalAlign="middle"/>
-			<s:Label width="100%" height="58" backgroundAlpha="0.5" backgroundColor="#FAFAFA" text="Comentario"
-					 verticalAlign="middle"/>
-			<s:TextArea id="taCom" width="100%" height="100"/>
-		</s:VGroup>
-	</s:Scroller>
 	
-	<s:Button y="685" width="90%" height="75" label="Crear Categoria" horizontalCenter="-2" id="proc"
-			  click="process(event)"/>
+	
+	<s:Label left="0" right="0" height="58" backgroundAlpha="0.5" backgroundColor="#FAFAFA"
+			 fontSize="30" fontWeight="bold" text="  Nombre" verticalAlign="middle"/>
+	<s:TextInput id="tiNom" y="66" left="10" right="10" />
+	<s:Label y="135" left="0" width="45%" height="58" backgroundAlpha="0.5" backgroundColor="#FAFAFA"
+			 fontSize="30" fontWeight="bold" text="  Cantidad Ideal" verticalAlign="middle"/>
+	
+	<s:VGroup y="206" left="20" width="223">
+		<s:RadioButton id="iA" label="Auto" group="{itype}" value="0"/>
+		<s:RadioButton id="iC" label="Cantidad" group="{itype}" value="1"/>
+		<s:RadioButton id="iP" label="Porcentaje" group="{itype}" value="2"/>        
+	</s:VGroup>
+	<s:TextInput id="tiCant" y="376" left="20" width="223" enabled="false" restrict="[0-9]"/>
+	<s:Label y="445" left="0" right="0" height="58" backgroundAlpha="0.5"
+			 backgroundColor="#FAFAFA" fontSize="30" fontWeight="bold" text="  Comentario"
+			 verticalAlign="middle"/>
+	<s:TextArea id="taCom" y="520" left="10" right="10" height="117"/>
+	
+	<s:Label y="135" right="0" width="45%" height="58" backgroundAlpha="0.5"
+			 backgroundColor="#FAFAFA" fontSize="30" fontWeight="bold" text="  Tipo"
+			 verticalAlign="middle"/>
+	
+	<s:VGroup y="208" left="308" width="210">
+		<s:RadioButton id="tS" label="Salida" group="{ttype}" value="0"/>
+		<s:RadioButton id="tE" label="Entrada" group="{ttype}" value="1"/>
+		<s:RadioButton id="tA" label="Ahorro" group="{ttype}" value="2"/>        
+	</s:VGroup>
+		
+			
+	
+	
+	<s:Button id="proc" left="10" right="10" bottom="20" height="75" label="Crear Categoria"
+			  click="process(event)" fontSize="25"/>
 	
 	<fx:Declarations>
 		<s:RadioButtonGroup id="ttype" itemClick="typeItemClickH(event)"/>

@@ -6,8 +6,10 @@
 	</fx:Declarations>
 	<s:TitleWindow close="close()" fontSize="20" horizontalCenter="0" title="{title}"
 				   verticalCenter="0">
-		<s:VGroup paddingTop="8" paddingBottom="8" paddingLeft="8" paddingRight="8" horizontalAlign="center">
-			<s:TextArea borderVisible="false" editable="false" fontSize="25" text="{content}"/>
+		<s:VGroup height="268" horizontalAlign="center" paddingBottom="8" paddingLeft="8"
+				  paddingRight="8" paddingTop="8">
+			<s:Label x="-6" width="363" height="172" backgroundColor="#ECECEC" text="{content}"
+					 textAlign="center" verticalAlign="middle"/>
 			<s:Button label="Cerrar" click="this.close()" fontSize="25"/>
 		</s:VGroup>
 	</s:TitleWindow>

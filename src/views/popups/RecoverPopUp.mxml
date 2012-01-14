@@ -81,7 +81,7 @@
 	<s:Button bottom="16" width="187" height="60" label="Recuperar" click="rec_clickHandler(event)"
 			  fontSize="25" horizontalCenter="116"/>
 	<s:Button x="390" y="17" width="53" height="49" label="X" fontSize="20" click="cerrar()"/>
-	<s:TextInput id="ti" y="112" width="95%" height="50" horizontalCenter="0"/>
+	<s:TextInput id="ti" y="112" left="20" right="20"/>
 	<s:Label id="err" visible="false" x="15" y="213" color="#E55454" fontSize="20" text="Debe llenar el campo"/>
 	
 </s:SkinnablePopUpContainer>

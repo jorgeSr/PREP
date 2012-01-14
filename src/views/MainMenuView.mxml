@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" title="Menu Principal"
-		backgroundAlpha="0.8" backgroundColor="#EAC26B" xmlns:popups="views.popups.*">
+		backgroundAlpha="0.8" backgroundColor="#EAC26B" xmlns:popups="views.popups.*"
+		creationComplete="initMain(event)">
+	
 	<fx:Script>
 		<![CDATA[
+			import as3.Globals;
+			import as3.pojos.Period;
+			import as3.utils.date.DateUtil;
+			
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			
@@ -11,6 +19,39 @@
 			import views.categorias.NewEditCategory;
 			import views.periodos.NewPeriod;
 			import views.transacciones.NewTransaction;
+			
+			protected function initMain(event:FlexEvent):void
+			{
+				if( Globals.periodo == null )
+					remP.getPeriodoActual( DateUtil.getDateAsString( new Date() ) );
+				else
+					lbPeriodo.text = "Periodo: "+DateUtil.getStringdateAsStringdateview(Globals.periodo.iniDate)+" - "+
+						DateUtil.getStringdateAsStringdateview(Globals.periodo.endDate);
+			}
+			
+			protected function getPeriodoActual_resultHandler(event:ResultEvent):void
+			{
+				var ac:Array = event.result as Array;
+				if(ac != null)
+				{
+					if(ac.length> 0)
+					{
+						Globals.periodo = new Period();
+						Globals.periodo.endDate = ac[0].endDate;
+						Globals.periodo.iniDate = ac[0].iniDate;
+						Globals.periodo.id = ac[0].id;
+						
+						//Si se esta dentro de un periodo las transacciones y la edicion de este son habilitadas
+						Globals.inPeriod = true;
+						lbPeriodo.text = "Periodo: "+DateUtil.getStringdateAsStringdateview(Globals.periodo.iniDate)+" - "+
+							DateUtil.getStringdateAsStringdateview(Globals.periodo.endDate);
+						return;
+					}					
+				}
+				
+				Globals.inPeriod = false;
+				lbPeriodo.text = "Fuera de Periodo";
+			}
 			
 			protected function showMessage( msg:String, tit:String = "Alerta" ):void
 			{
@@ -27,8 +68,30 @@
 				navigator.pushView( CotegoryList, obj )
 			}
 			
+			protected function faultHandler(event:FaultEvent):void
+			{
+				pop.title = "Error";
+				pop.content = event.fault.faultString;
+				pop.open(this);
+			}
+			
+			protected function btnP_clickHandler(update:Boolean = false):void
+			{
+				var obj:Object = new Object();
+				obj.update = update;
+				navigator.pushView( NewPeriod, obj );
+			}
+			
 		]]>
 	</fx:Script>
+	
+	<fx:Declarations>
+		<s:RemoteObject id="remP" destination="zend" source="periodC" fault="faultHandler(event)">
+			<s:method name="getPeriodoActual" result="getPeriodoActual_resultHandler(event)"/>
+		</s:RemoteObject>
+		<popups:AlertPopUp id="pop" />
+	</fx:Declarations>
+	
 	<s:Rect x="0" y="0" width="{this.width}" height="{this.height}">
 		<s:fill>
 			<s:LinearGradient rotation="90">
@@ -38,27 +101,37 @@
 		</s:fill>
 	</s:Rect>
 	
-	<s:Label x="0" top="0" width="100%" height="55" backgroundAlpha="0.8" backgroundColor="#F7F7F7"
+	<s:Label x="0" top="65" width="100%" height="55" backgroundAlpha="0.8" backgroundColor="#F7F7F7"
 			 text="Periodos" textAlign="center" verticalAlign="middle"/>
-	<s:Button y="530" width="141" height="90" click=" navigator.pushView( NewTransaction )"
-			  horizontalCenter="-160" icon="@Embed('assets/add.png')"/>
-	<s:Button y="530" width="141" height="90" horizontalCenter="0" icon="@Embed('assets/edi.png')"/>
-	<s:Button y="530" width="141" height="90" label="Ver" horizontalCenter="160"/>
+	<s:Label id="lbPeriodo" x="0" top="0" width="100%" height="65" backgroundAlpha="0.4"
+			 backgroundColor="#BC6824" color="#4E2C16" text="Periodo: " textAlign="center"
+			 verticalAlign="middle"/>
+	<s:Button id="btnNewT" y="595" width="141" height="90"
+			  click=" navigator.pushView( NewTransaction )" enabled="{Globals.inPeriod}" horizontalCenter="-160"
+			  icon="@Embed('assets/add.png')"/>
+	<s:Button id="btnEdT" y="595" width="141" height="90" enabled="{Globals.inPeriod}" horizontalCenter="0"
+			  icon="@Embed('assets/edi.png')"/>
+	<s:Button id="btnGrT" y="595" width="141" height="90" label="Ver" enabled="{Globals.inPeriod}"
+			  horizontalCenter="160"/>
 	
-	<s:Label x="0" top="224" width="100%" height="55" backgroundAlpha="0.8" backgroundColor="#F7F7F7"
+	<s:Label x="0" top="289" width="100%" height="55" backgroundAlpha="0.8" backgroundColor="#F7F7F7"
 			 text="Categorias" textAlign="center" verticalAlign="middle"/>
-	<s:Button y="302" width="141" height="90" click=" navigator.pushView( NewEditCategory )"
+	<s:Button y="367" width="141" height="90" click=" navigator.pushView( NewEditCategory )"
 			  horizontalCenter="-160" icon="@Embed('assets/add.png')"/>
-	<s:Button y="302" width="141" height="90" horizontalCenter="0" icon="@Embed('assets/edi.png')"
+	<s:Button y="367" width="141" height="90" horizontalCenter="0" icon="@Embed('assets/edi.png')"
 			  click="eCat_clickHandler(event)" />
-	<s:Button y="302" width="141" height="90" label="Ver" horizontalCenter="160"/>
+	<s:Button y="367" width="141" height="90" label="Ver" horizontalCenter="160"/>
 
-	<s:Label x="0" top="451" width="100%" height="55" backgroundAlpha="0.8" backgroundColor="#F7F7F7"
+	<s:Label x="0" top="516" width="100%" height="55" backgroundAlpha="0.8" backgroundColor="#F7F7F7"
 			 text="Transacciones" textAlign="center" verticalAlign="middle"/>
-	<s:Button y="77" width="141" height="90" click="navigator.pushView( NewPeriod )"
-			  horizontalCenter="-160" icon="@Embed('assets/add.png')"/>
-	<s:Button y="77" width="141" height="90" horizontalCenter="0" icon="@Embed('assets/edi.png')"/>
-	<s:Button y="77" width="141" height="90" label="Ver" horizontalCenter="160"/>
+	
+	<s:Button id="btnNewPeriod" y="142" width="141" height="90"
+			  click="btnP_clickHandler()" horizontalCenter="-160"
+			  icon="@Embed('assets/add.png')" enabled="{!Globals.inPeriod}"/>
+	
+	<s:Button id="btnEdP" y="142" width="141" height="90" click="btnP_clickHandler(true)"
+			  enabled="{Globals.inPeriod}" horizontalCenter="0" icon="@Embed('assets/edi.png')"/>
+	<s:Button y="142" width="141" height="90" label="Ver" horizontalCenter="160"/>
 	
 	<fx:Declarations>
 		<popups:AlertPopUp id="alert" open="this.enabled = false" close="this.enabled = true" />

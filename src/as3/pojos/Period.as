@@ -6,7 +6,7 @@ package as3.pojos
 	{
 		public var id:int;
 		public var userId:int;
-		public var iniDate:Date;
-		public var endDate:Date;
+		public var iniDate:String;  //It should be date
+		public var endDate:String;  //It should be date
 	}
 }
