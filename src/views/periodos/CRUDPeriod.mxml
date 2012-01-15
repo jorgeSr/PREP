@@ -18,7 +18,7 @@
 			
 			import views.popups.ConfirmPopUp;
 			import views.popups.DatePopUp;
-			import views.transacciones.NewTransaction;
+			import views.transacciones.CRUDTransaction;
 			
 			public var iniDate:Date;
 			public var finDate:Date;
@@ -197,7 +197,7 @@
 			 verticalAlign="middle"/>
 	
 	<s:Button id="btnNewT" y="414" left="20" width="45%" height="80"
-			  click=" navigator.pushView( NewTransaction, true)" enabled="false"
+			  click=" navigator.pushView( CRUDTransaction, true)" enabled="false"
 			  icon="@Embed('assets/add.png')"/>
 	<s:Button id="btnUpDelT" y="414" right="20" width="45%" height="80" enabled="false"
 			  icon="@Embed('assets/edi.png')"/>

@@ -118,17 +118,34 @@
 			
 			protected function catR_faultHandler(event:FaultEvent):void
 			{
-				pop.content = "Error al "+(data == null ? "crear":"actualizar")+" la categoria en el servidor: "+event.fault.faultString;
+				pop.content = "Error al tratar de "+(data == null ? "crear":"modificar")+" la categoria en el servidor: "+event.fault.faultString;
 				pop.open( this );
 			}
 			
 			
 			
+			protected function rmv_resultHandler(event:ResultEvent):void
+			{
+				if( !(event.result is Category) )
+				{
+					pop.title = "ERROR";
+					pop.content = "Ocurrio un error al eliminar la categoria, contacte al Administrador ! \n "+event.result;
+					pop.open(this);
+				}
+				else
+				{
+					pop.title = "Listo";
+					pop.content = "Ctegoria Eliminado Exitosamente";					
+					pop.open(this);				
+					navigator.pushView( MainMenuView );
+				}
+			}
+			
 		]]>
 	</fx:Script>
 	
 	<s:actionContent>
-		<s:Button icon="@Embed('assets/del.png')" visible="false" id="btnDel"/>
+		<s:Button icon="@Embed('assets/del.png')" visible="false" id="btnDel" click="delPop.open(this)"/>
 	</s:actionContent>
 	
 	<s:Rect x="0" y="0" width="{this.width}" height="{this.height}">
@@ -180,10 +197,13 @@
 		<s:RadioButtonGroup id="ttype" itemClick="typeItemClickH(event)"/>
 		<s:RadioButtonGroup id="itype" itemClick="idealItemClickH(event)"/>
 		<popups:AlertPopUp id="pop" open="this.enabled = tabBarVisible = false" close="this.enabled = tabBarVisible = true"/>
+		<popups:ConfirmPopUp id="delPop" ok="catR.remove(newCat)" open="enabled = false" close="enabled = true" 
+							 content="Desea Eliminar esta Categoria? Todas las transacciones relacionadas seran eliminadas !"/>
 		
 		<s:RemoteObject id="catR" destination="zend" source="categoryC" fault="catR_faultHandler(event)" result="resultHandler(event)">
 			<s:method name="create" />
 			<s:method name="update" />
+			<s:method name="remove" result="rmv_resultHandler(event)"/>
 		</s:RemoteObject>
 	</fx:Declarations>
 </s:View>

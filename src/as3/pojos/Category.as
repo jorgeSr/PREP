@@ -1,6 +1,6 @@
 package as3.pojos
 {
-	[RemoteClass(alias="Period")]
+	[RemoteClass(alias="Category")]
 	[Bindable]
 	public class Category
 	{

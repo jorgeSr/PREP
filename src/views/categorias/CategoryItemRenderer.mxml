@@ -36,8 +36,20 @@
 				decorator = coin; 
 			}
 			
+			/**
+			 *  0 - Auto
+			 *  1 - Cantidad
+			 *  2 - Procentaje
+			 * 
+			 */
 			private function myLabelFunction(item:Object):String {
-				return item.name;
+				switch( item.idealType )
+				{
+					case 0: return item.name+" / Auto"; break;
+					case 1: return item.name+" / $"+item.ideal; break;
+					case 2: return item.name+" / "+item.ideal+"%"; break;
+				}
+				return "";
 			}
 			
 			private function myMessageFunction(item:Object):String {

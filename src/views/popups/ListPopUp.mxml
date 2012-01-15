@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:SkinnablePopUpContainer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+						   xmlns:s="library://ns.adobe.com/flex/spark"
+						   creationComplete="PopUpManager.centerPopUp(this)" width="400" height="700">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		<s:ArrayCollection id="dp"/>
+	</fx:Declarations>
+	<s:List left="0" right="0" top="0" bottom="0" dataProvider="{dp}" labelField="{_lab}" click="list1_clickHandler(event)" id="list"
+			fontSize="20"></s:List>
+	<fx:Metadata>
+		[Event(name="selected", type="as3.events.SelectedItemEvent")]
+	</fx:Metadata>
+	<fx:Script>
+		<![CDATA[
+			import as3.events.SelectedItemEvent;
+			
+			import mx.managers.PopUpManager;
+			[Bindable]
+			private var _lab:String;
+			public var table:String;
+
+			[Bindable]
+			public function get lab():String
+			{
+				return _lab;
+			}
+
+			public function set lab(value:String):void
+			{
+				_lab = value;
+			}
+
+			protected function list1_clickHandler(event:MouseEvent):void
+			{
+				var evt:SelectedItemEvent = new SelectedItemEvent(SelectedItemEvent.SELECTED, list.selectedItem, table);
+				dispatchEvent(evt);
+			}
+			
+		]]>
+	</fx:Script>
+</s:SkinnablePopUpContainer>

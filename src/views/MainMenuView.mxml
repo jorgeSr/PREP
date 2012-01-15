@@ -16,9 +16,9 @@
 			import mx.rpc.events.ResultEvent;
 			
 			import views.categorias.CotegoryList;
-			import views.categorias.NewEditCategory;
-			import views.periodos.NewPeriod;
-			import views.transacciones.NewTransaction;
+			import views.categorias.CRUDCategory;
+			import views.periodos.CRUDPeriod;
+			import views.transacciones.CRUDTransaction;
 			
 			protected function initMain(event:FlexEvent):void
 			{
@@ -63,7 +63,7 @@
 			protected function eCat_clickHandler(event:MouseEvent):void
 			{
 				var obj:Object = new Object;
-				obj.viewClass = NewEditCategory;
+				obj.viewClass = CRUDCategory;
 				obj.type = 2;
 				navigator.pushView( CotegoryList, obj )
 			}
@@ -79,7 +79,7 @@
 			{
 				var obj:Object = new Object();
 				obj.update = update;
-				navigator.pushView( NewPeriod, obj );
+				navigator.pushView( CRUDPeriod, obj );
 			}
 			
 		]]>
@@ -107,7 +107,7 @@
 			 backgroundColor="#BC6824" color="#4E2C16" text="Periodo: " textAlign="center"
 			 verticalAlign="middle"/>
 	<s:Button id="btnNewT" y="595" width="141" height="90"
-			  click=" navigator.pushView( NewTransaction )" enabled="{Globals.inPeriod}" horizontalCenter="-160"
+			  click=" navigator.pushView( CRUDTransaction )" enabled="{Globals.inPeriod}" horizontalCenter="-160"
 			  icon="@Embed('assets/add.png')"/>
 	<s:Button id="btnEdT" y="595" width="141" height="90" enabled="{Globals.inPeriod}" horizontalCenter="0"
 			  icon="@Embed('assets/edi.png')"/>
@@ -116,7 +116,7 @@
 	
 	<s:Label x="0" top="289" width="100%" height="55" backgroundAlpha="0.8" backgroundColor="#F7F7F7"
 			 text="Categorias" textAlign="center" verticalAlign="middle"/>
-	<s:Button y="367" width="141" height="90" click=" navigator.pushView( NewEditCategory )"
+	<s:Button y="367" width="141" height="90" click=" navigator.pushView( CRUDCategory )"
 			  horizontalCenter="-160" icon="@Embed('assets/add.png')"/>
 	<s:Button y="367" width="141" height="90" horizontalCenter="0" icon="@Embed('assets/edi.png')"
 			  click="eCat_clickHandler(event)" />

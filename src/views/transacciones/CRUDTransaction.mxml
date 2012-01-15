@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" title="Nueva Transacción"
+		backgroundAlpha="0.8" backgroundColor="#EAC26B" creationComplete="view1_creationCompleteHandler(event)" xmlns:popups="views.popups.*">
+	<fx:Script>
+		<![CDATA[
+			import as3.Globals;
+			import as3.events.SelectedItemEvent;
+			import as3.pojos.Transaction;
+			import as3.utils.date.DateUtil;
+			
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			
+			private var tran:Transaction = new Transaction();
+			
+			protected function view1_creationCompleteHandler(event:FlexEvent):void
+			{
+				fechas.text = "Fechas: "+DateUtil.getStringdateAsStringdateview( Globals.periodo.iniDate )
+					+" - "+DateUtil.getStringdateAsStringdateview( Globals.periodo.endDate );
+				
+				/**
+				 * if there's no data, is a new transaction, otherwise is a update and 
+				 * it recives an not defined object transactionDetail with the name of the category
+				 * 
+				 * */
+				if( data != null ) 
+				{
+					//Set one by one the properties of the not formatted TransactionDetail Object//
+					btnProcess.label = "Modificar Transaccion";
+					selCat.text = data.transaction.categoryName;
+					selDate.text = DateUtil.getDateAsStringdateview( data.transaction.date );
+					return;
+				}	
+				
+				tran.periodId = Globals.periodo.id;
+			}
+			
+			protected function popDate_okDateHandler(event:Event):void
+			{
+				tran.date = popDate.spin.selectedDate; 
+				selDate.text = DateUtil.getDateAsStringdateview( tran.date );
+			}
+			
+			protected function rem_faultHandler(event:FaultEvent):void
+			{
+				pop.title = "Error";
+				pop.content = event.fault.faultString;
+				pop.open(this);
+			}
+			
+			protected function cat_resultHandler(event:ResultEvent):void
+			{
+				if( event.result != null )
+				{
+					var ac:ArrayCollection = new ArrayCollection( event.result as Array );
+					if( ac.length > 0 )
+					{
+						popList.lab = "name";
+						popList.table = "Category";
+						popList.dp = ac;
+						popList.open( this );
+					}
+					else
+					{
+						pop.title = "Alerta";
+						pop.content = "No ha creado ninguna categoria del tipo seleccionado aun";
+						pop.open( this );
+					}
+				}
+				else
+				{
+					pop.title = "Alerta";
+					pop.content = "No ha creado ninguna categoria del tipo seleccionado aun";
+					pop.open( this );
+				}
+			}
+			
+			protected function popList_selectedHandler(event:SelectedItemEvent):void
+			{
+				selCat.text = event.item.name;
+				tran.categoryId = event.item.id;
+				event.target.close();
+			}
+			
+			protected function process():void
+			{
+				if(tran.date == null || tran.categoryId == 0 || tiCan.text == "" || tiDet.text == "" )
+				{
+					pop.title = "Error";
+					pop.content = "Existen campos vacios, verifique que ingreso todos los datos";
+					pop.open(this);
+					return;
+				}
+				
+				if(data != null)
+				{
+					rem.update( tran );
+				}
+				else
+				{
+					rem.create( tran );
+				}
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:Rect x="0" y="0" width="{this.width}" height="{this.height}">
+		<s:fill>
+			<s:LinearGradient rotation="90">
+				<s:GradientEntry color="#efefef" alpha="0"/>
+				<s:GradientEntry color="#ffffff" alpha="0.2"/>
+			</s:LinearGradient>
+		</s:fill>
+	</s:Rect>
+	
+	<s:Label left="0" right="0" height="51" backgroundColor="#EAE1D9" fontWeight="bold"
+			 text="Periodo" textAlign="center" verticalAlign="middle"/>
+	<s:Label id="fechas" y="52" left="0" right="0" height="38" backgroundAlpha="0.5"
+			 backgroundColor="#EAE1D9" color="#664316" fontSize="25" textAlign="center"
+			 verticalAlign="middle"/>
+	<s:Label x="20" y="135" fontSize="30" text="Categoria"/>
+	<s:Label x="20" y="203" fontSize="30" text="Detalle"/>
+	<s:Label x="20" y="270" fontSize="30" text="Cantidad"/>
+	<s:Label x="20" y="331" fontSize="30" text="Fecha"/>
+	<s:TextInput id="tiCan" y="255" left="170" right="20"/>
+	<s:TextInput id="tiDet" y="189" left="170" right="20"/>
+	<s:Label x="20" y="407" fontSize="30" fontWeight="bold" text="Tipo:"/>
+	<s:VGroup left="24" right="192" top="443" height="127">
+		<s:RadioButton width="90%" label="Salida" color="#5A4B4B" fontSize="30" group="{ttype}"
+					   selected="true" value="0"/>
+		<s:RadioButton width="90%" label="Entrada" color="#5A4B4B" fontSize="30" group="{ttype}"
+					   value="1"/>
+		<s:RadioButton width="90%" label="Ahorro" color="#5A4B4B" fontSize="30" group="{ttype}"
+					   value="2"/>        
+	</s:VGroup>
+	
+	<s:Button id="btnProcess" left="20" right="20" bottom="20" height="75" label="Crear Transacción"
+			  click="process()" fontSize="25"/>
+	
+	<s:Label id="selDate" y="321" left="170" right="20" height="50" backgroundAlpha="0.8"
+			 backgroundColor="#FFFFFF" click="popDate.open(this)" color="#646464"
+			 fontSize="25" text="click para seleccionar " textAlign="center"
+			 verticalAlign="middle"/>
+	
+	<s:Label id="selCat" y="124" left="169" right="21" height="50" backgroundAlpha="0.8"
+			 backgroundColor="#FFFFFF" click="remC.findAll()" color="#646464"
+			 fontSize="25" text="click para seleccionar " textAlign="center"
+			 verticalAlign="middle"/>
+	
+	<fx:Declarations>
+		<s:RadioButtonGroup id="ttype"/>
+		<popups:AlertPopUp id="pop" open="enabled = false" close="enabled = true"/>
+		<popups:DatePopUp id="popDate" open="enabled = false" close="enabled =true" okDate="popDate_okDateHandler(event)"/>
+		<popups:ListPopUp id="popList" open="enabled = false" close="enabled = true" selected="popList_selectedHandler(event)"/>
+		
+		<s:RemoteObject id="remC" destination="zend" source="categoryC" fault="rem_faultHandler(event)">
+			<s:method name="findAll" result="cat_resultHandler(event)"/>
+			<s:method name="findByType" result="cat_resultHandler(event)"/> <!-- PENDIENDE -->
+		</s:RemoteObject>
+		
+		<s:RemoteObject id="rem" destination="zend" source="transactionC" fault="rem_faultHandler(event)">
+			<s:method name="create" /> <!-- PENDIENDE -->
+			<s:method name="update" /> <!-- PENDIENDE -->
+			<s:method name="delete" /> <!-- PENDIENDE -->
+		</s:RemoteObject>
+	</fx:Declarations>
+</s:View>
