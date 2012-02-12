@@ -154,7 +154,10 @@
 			
 			protected function btnUpDelT_clickHandler(event:MouseEvent):void
 			{
-				navigator.pushView( StaticTransactionList );
+				var obj:Object = new Object;
+				obj.viewClass = CRUDStaticTransaction;
+				obj.type = 2;
+				navigator.pushView( StaticTransactionList, obj );
 			}
 			
 		]]>

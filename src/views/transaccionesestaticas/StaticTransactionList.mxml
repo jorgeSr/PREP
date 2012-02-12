@@ -63,11 +63,11 @@
 	<fx:Declarations>
 		<popups:AlertPopUp id="apop" />
 		
-		<s:RemoteObject id="remT" destination="zend" source="transactionC" fault="rem_faultHandler(event)">
+		<s:RemoteObject id="remT" destination="zend" source="staticTransactionC" fault="rem_faultHandler(event)">
 			<s:method name="findAll" result="initView(event)"/>
 		</s:RemoteObject>
 	</fx:Declarations>
 	
 	<s:List id="list" left="10" right="10" top="10" bottom="10" click="clickHandler(event)"
-			itemRenderer="views.transacciones.TransactionItemRenderer"></s:List>
+			itemRenderer="views.transaccionesestaticas.StaticTransactionItemRenderer"></s:List>
 </s:View>

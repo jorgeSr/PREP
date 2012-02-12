@@ -18,6 +18,7 @@
 			import mx.rpc.events.ResultEvent;
 			
 			import views.MainMenuView;
+			import views.periodos.CRUDPeriod;
 			
 			private var tran:StaticTransaction = new StaticTransaction();
 			
@@ -39,16 +40,18 @@
 					//Set one by one the properties of the not formatted TransactionDetail Object//
 					btnProcess.label = "Modificar Transaccion";
 					selCat.text = data.categoryName;
-					selDate.text = DateUtil.getStringdateAsStringdateview( data.date as String );
+					selDateLim.text =  DateUtil.getStringdateAsStringdateview( data.extra as String );
 					tiCan.text = data.amount+"";
 					tiDet.text = data.detail;
 					
+					selDate.enabled = false;
 					//Se agrega el done
 					if( data.done )
 					{
-						tran.done = tog.selected = true;
-						selDate.text = DateUtil.getStringdateAsStringdateview( data.extra as String );
-						tran.extra = data.extra;
+						tran.date = data.date;
+						tiVar.enabled = selDate.enabled = tran.done = tog.selected = true;
+						selDate.text = DateUtil.getStringdateAsStringdateview( data.date as String );
+						selDate.alpha = 1;
 						tran.variation = data.variation;
 						tiVar.text = data.variation+"";
 					}
@@ -56,8 +59,8 @@
 					taCom.text = tran.comment = data.comment;
 					
 					tran.amount = data.amount;
+					tran.extra = data.extra;
 					tran.categoryId = data.categoryId;
-					tran.date = data.date;
 					tran.id = data.id;
 					tran.isStatic = data.isStatic;
 					tran.periodId = data.periodId;
@@ -202,7 +205,7 @@
 			
 			protected function create_resultHandler(event:ResultEvent):void
 			{
-				if( !(event.result is Transaction ) )
+				if( !(event.result is StaticTransaction ) )
 				{
 					pop.title = "ERROR";
 					pop.content = "Ocurrio un error al "+(data == null ? "crear":"modificar")+" la transaccion, contacte al Administrador ! \n "+event.result;
@@ -213,7 +216,9 @@
 					pop.title = "Listo";
 					pop.content = "Transaccion "+(data == null ? "creada":"modificada")+" Exitosamente";					
 					pop.open(this);				
-					navigator.popView();
+					var obj:Object = new Object();
+					obj.update = true;
+					navigator.pushView( CRUDPeriod, obj );
 				}
 			}
 			
@@ -244,7 +249,9 @@
 					pop.title = "Listo";
 					pop.content = "Transaccion Eliminado Exitosamente";					
 					pop.open(this);				
-					navigator.pushView( MainMenuView );
+					var obj:Object = new Object();
+					obj.update = true;
+					navigator.pushView( CRUDPeriod, obj );
 				}
 			}
 			
@@ -321,7 +328,7 @@
 			
 			<s:Label id="selDate" y="198" left="170" right="20" height="50" alpha="0.5"
 					 backgroundAlpha="0.8" backgroundColor="#FFFFFF"
-					 click="popDate.ident = '', popDate.open(this)" color="#646464" fontSize="25"
+					 click="if(selDate.enabled){popDate.ident = '', popDate.open(this)}" color="#646464" fontSize="25"
 					 text="click para seleccionar " textAlign="center" verticalAlign="middle"/>
 			<s:Label id="selDateLim" y="419" left="273" right="20" height="62" backgroundAlpha="0.8"
 					 backgroundColor="#FFFFFF"

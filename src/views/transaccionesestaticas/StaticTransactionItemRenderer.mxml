@@ -44,7 +44,8 @@
 			 * 
 			 */
 			private function myLabelFunction(item:Object):String {
-				return "$"+item.amount+"\n"+DateUtil.getStringdateAsStringdateview(item.date);
+				var doneS:String = "\nRealizada: "+(item.done ? "SI "+DateUtil.getStringdateAsStringdateview(item.date):"NO");
+				return "$"+item.amount+""+doneS+"\nFecha limite: "+DateUtil.getStringdateAsStringdateview(item.extra);
 			}
 			
 			private function myMessageFunction(item:Object):String {
