@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:IconItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					xmlns:s="library://ns.adobe.com/flex/spark" iconWidth="64" iconHeight="64" iconFillMode="scale" labelFunction="myLabelFunction"
+					iconFunction="setIcon" messageFunction="myMessageFunction" >
+	<fx:Script>
+		<![CDATA[
+			import as3.pojos.Category;
+			import as3.utils.date.DateUtil;
+			[Bindable]
+			[Embed(source="assets/pig.jpg")]
+			public var ahorro:Class;
+			[Bindable]
+			[Embed(source="assets/inflow.png")]
+			public var entrada:Class;
+			[Bindable]
+			[Embed(source="assets/outflow.png")]
+			public var salida:Class;
+			[Embed(source="assets/coin.png")]
+			public var coin:Class;
+			
+			override public function set data(value:Object):void {
+				super.data = value;
+				if (data == null) return;
+				setDecorator(value);
+			}
+			
+			private function setIcon(item:Object):Object {
+				switch(item.type){
+					case 0: return salida; break;
+					case 1: return entrada; break;
+					case 2: return ahorro; break;
+					default: return null;
+				}
+			}
+			
+			private function setDecorator(item:Object):void {
+				decorator = coin; 
+			}
+			
+			/**
+			 *  0 - Auto
+			 *  1 - Cantidad
+			 *  2 - Procentaje
+			 * 
+			 */
+			private function myLabelFunction(item:Object):String {
+				return "$"+item.amount+"\n"+DateUtil.getStringdateAsStringdateview(item.date);
+			}
+			
+			private function myMessageFunction(item:Object):String {
+				return item.categoryName+": "+item.detail;
+			}
+		]]>
+	</fx:Script>
+</s:IconItemRenderer>

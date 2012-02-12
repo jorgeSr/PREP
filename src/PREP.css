@@ -9,3 +9,10 @@ global
 	font-weight: normal;
 }
 	
+s|TextInput{
+	skinClass:ClassReference("spark.skins.mobile.TextInputSkin")
+}
+
+s|TextArea{
+	skinClass:ClassReference("spark.skins.mobile.TextAreaSkin")
+}

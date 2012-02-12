@@ -15,10 +15,11 @@
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
 			
-			import views.categorias.CotegoryList;
 			import views.categorias.CRUDCategory;
+			import views.categorias.CotegoryList;
 			import views.periodos.CRUDPeriod;
 			import views.transacciones.CRUDTransaction;
+			import views.transacciones.TransactionList;
 			
 			protected function initMain(event:FlexEvent):void
 			{
@@ -68,6 +69,14 @@
 				navigator.pushView( CotegoryList, obj )
 			}
 			
+			protected function eTra_clickHandler(event:MouseEvent):void
+			{
+				var obj:Object = new Object;
+				obj.viewClass = CRUDTransaction;
+				obj.type = 2;
+				navigator.pushView( TransactionList, obj )
+			}
+			
 			protected function faultHandler(event:FaultEvent):void
 			{
 				pop.title = "Error";
@@ -109,8 +118,9 @@
 	<s:Button id="btnNewT" y="595" width="141" height="90"
 			  click=" navigator.pushView( CRUDTransaction )" enabled="{Globals.inPeriod}" horizontalCenter="-160"
 			  icon="@Embed('assets/add.png')"/>
-	<s:Button id="btnEdT" y="595" width="141" height="90" enabled="{Globals.inPeriod}" horizontalCenter="0"
-			  icon="@Embed('assets/edi.png')"/>
+	<s:Button id="btnEdT" y="595" width="141" height="90"
+			  click="eTra_clickHandler(event)" enabled="{Globals.inPeriod}"
+			  horizontalCenter="0" icon="@Embed('assets/edi.png')"/>
 	<s:Button id="btnGrT" y="595" width="141" height="90" label="Ver" enabled="{Globals.inPeriod}"
 			  horizontalCenter="160"/>
 	

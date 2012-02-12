@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		xmlns:s="library://ns.adobe.com/flex/spark" title="Transacción"
+		xmlns:s="library://ns.adobe.com/flex/spark" title="Transacción Estatica"
 		backgroundAlpha="0.8" backgroundColor="#EAC26B" creationComplete="view1_creationCompleteHandler(event)" xmlns:popups="views.popups.*">
+	
 	<fx:Script>
 		<![CDATA[
 			import as3.Globals;
 			import as3.events.SelectedItemEvent;
+			import as3.pojos.StaticTransaction;
 			import as3.pojos.Transaction;
 			import as3.utils.date.DateUtil;
 			
@@ -17,10 +19,11 @@
 			
 			import views.MainMenuView;
 			
-			private var tran:Transaction = new Transaction();
+			private var tran:StaticTransaction = new StaticTransaction();
 			
 			protected function view1_creationCompleteHandler(event:FlexEvent):void
 			{
+				
 				fechas.text = "Fechas: "+DateUtil.getStringdateAsStringdateview( Globals.periodo.iniDate )
 					+" - "+DateUtil.getStringdateAsStringdateview( Globals.periodo.endDate );
 				
@@ -39,6 +42,18 @@
 					selDate.text = DateUtil.getStringdateAsStringdateview( data.date as String );
 					tiCan.text = data.amount+"";
 					tiDet.text = data.detail;
+					
+					//Se agrega el done
+					if( data.done )
+					{
+						tran.done = tog.selected = true;
+						selDate.text = DateUtil.getStringdateAsStringdateview( data.extra as String );
+						tran.extra = data.extra;
+						tran.variation = data.variation;
+						tiVar.text = data.variation+"";
+					}
+					
+					taCom.text = tran.comment = data.comment;
 					
 					tran.amount = data.amount;
 					tran.categoryId = data.categoryId;
@@ -64,9 +79,18 @@
 			}
 			
 			protected function popDate_okDateHandler(event:Event):void
-			{
-				tran.date = DateUtil.getDateAsString(popDate.spin.selectedDate);; 
-				selDate.text = DateUtil.getStringdateAsStringdateview( tran.date );
+			{	
+				if( popDate.ident == "lim" )
+				{
+					tran.extra = DateUtil.getDateAsString( popDate.spin.selectedDate );
+					selDateLim.text = DateUtil.getStringdateAsStringdateview( tran.extra );
+				}
+				else
+				{
+					tran.date = DateUtil.getDateAsString( popDate.spin.selectedDate );
+					selDate.text = DateUtil.getStringdateAsStringdateview( tran.date );
+				}
+				
 			}
 			
 			protected function cat_resultHandler(event:ResultEvent):void
@@ -105,7 +129,7 @@
 			
 			protected function process():void
 			{
-				if(tran.date == null || tran.categoryId == 0 || tiCan.text == "" || tiDet.text == "" )
+				if(tran.extra == null || tran.categoryId == 0 || tiCan.text == "" || tiDet.text == "" )
 				{
 					pop.title = "Error";
 					pop.content = "Existen campos vacios, verifique que ingreso todos los datos";
@@ -113,25 +137,58 @@
 					return;
 				}
 				
-				var menorMayor:int = DateUtil.compareDates( DateUtil.getStringAsDate( tran.date ) , DateUtil.getStringAsDate( Globals.periodo.iniDate ) );
+				var menorMayor:int = DateUtil.compareDates( DateUtil.getStringAsDate( tran.extra ) , DateUtil.getStringAsDate( Globals.periodo.iniDate ) );
 				if( menorMayor == 1 )
 				{
 					pop.title = "Error";
-					pop.content = "La fecha es menor a la fecha inicial del periodo";
+					pop.content = "La fecha limite es menor a la fecha inicial del periodo";
 					pop.open(this);
 					return;
 				}
-				menorMayor = DateUtil.compareDates(  DateUtil.getStringAsDate( Globals.periodo.endDate ), DateUtil.getStringAsDate( tran.date ) );
+				menorMayor = DateUtil.compareDates(  DateUtil.getStringAsDate( Globals.periodo.endDate ), DateUtil.getStringAsDate( tran.extra ) );
 				if( menorMayor == 1 )
 				{
 					pop.title = "Error";
-					pop.content = "La fecha es mayor a la fecha final del periodo";
+					pop.content = "La fecha limite es mayor a la fecha final del periodo";
 					pop.open(this);
 					return;
 				}
 				
+				if( tran.done )
+				{
+					if( tran.date == null )
+					{
+						pop.title = "Error";
+						pop.content = "Debe seleccionar la fecha";
+						pop.open(this);
+						return;
+					}
+					
+					menorMayor = DateUtil.compareDates( DateUtil.getStringAsDate( tran.date ) , DateUtil.getStringAsDate( Globals.periodo.iniDate ) );
+					if( menorMayor == 1 )
+					{
+						pop.title = "Error";
+						pop.content = "La fecha es menor a la fecha inicial del periodo";
+						pop.open(this);
+						return;
+					}
+					menorMayor = DateUtil.compareDates(  DateUtil.getStringAsDate( Globals.periodo.endDate ), DateUtil.getStringAsDate( tran.date ) );
+					if( menorMayor == 1 )
+					{
+						pop.title = "Error";
+						pop.content = "La fecha es mayor a la fecha final del periodo";
+						pop.open(this);
+						return;
+					}
+				}
+				
 				tran.amount = Number(tiCan.text);
 				tran.detail = tiDet.text;
+				
+				//The static transaction parameters
+				tran.isStatic = true;
+				tran.comment = taCom.text;
+				tran.variation = Number( tiVar.text );
 				
 				if(data != null)
 				{
@@ -156,7 +213,7 @@
 					pop.title = "Listo";
 					pop.content = "Transaccion "+(data == null ? "creada":"modificada")+" Exitosamente";					
 					pop.open(this);				
-					navigator.pushView( MainMenuView );
+					navigator.popView();
 				}
 			}
 			
@@ -191,6 +248,26 @@
 				}
 			}
 			
+			protected function toggleswitch_changeHandler(event:Event):void
+			{
+				tran.done = tog.selected; 
+				
+				if( tog.selected )
+				{
+					tiVar.enabled = selDate.enabled = true;					
+					selDate.alpha = 1;
+				}
+				else
+				{
+					tiVar.enabled = selDate.enabled = false;
+					selDate.alpha = 0.5;
+					tiVar.text = "0"; 
+					tran.variation = 0;
+					selDate.text = "click para seleccionar";
+					tran.date = null;
+				}
+			}
+			
 		]]>
 	</fx:Script>
 	
@@ -212,34 +289,53 @@
 	<s:Label id="fechas" y="52" left="0" right="0" height="38" backgroundAlpha="0.5"
 			 backgroundColor="#EAE1D9" color="#664316" fontSize="25" textAlign="center"
 			 verticalAlign="middle"/>
-	<s:Label x="20" y="135" fontSize="30" text="Categoria"/>
-	<s:Label x="20" y="203" fontSize="30" text="Detalle"/>
-	<s:Label x="20" y="270" fontSize="30" text="Cantidad"/>
-	<s:Label x="20" y="331" fontSize="30" text="Fecha"/>
-	<s:TextInput id="tiCan" y="255" left="170" right="20" restrict="[0-9]."/>
-	<s:TextInput id="tiDet" y="189" left="170" right="20"/>
-	<s:Label x="20" y="407" fontSize="30" fontWeight="bold" text="Tipo:"/>
-	<s:VGroup left="24" right="192" top="443" height="127">
-		<s:RadioButton id="tS" width="90%" label="Salida" color="#5A4B4B" fontSize="30" group="{type}"
-					   selected="true" value="0"/>
-		<s:RadioButton id="tE" width="90%" label="Entrada" color="#5A4B4B" fontSize="30" group="{type}"
-					   value="1"/>
-		<s:RadioButton id="tA" width="90%" label="Ahorro" color="#5A4B4B" fontSize="30" group="{type}"
-					   value="2"/>        
-	</s:VGroup>
 	
-	<s:Button id="btnProcess" left="20" right="20" bottom="20" height="75" label="Crear Transacción"
+	<s:Scroller x="10" top="100" bottom="78" width="517">
+		<s:Group width="100%" height="100%">
+			
+			<s:Label x="20" y="12" fontSize="30" text="Categoria"/>
+			<s:Label x="20" y="80" fontSize="30" text="Detalle"/>
+			<s:Label x="20" y="147" fontSize="30" text="Cantidad"/>
+			<s:Label x="20" y="573" fontSize="30" text="Comentario"/>
+			<s:Label x="20" y="208" fontSize="30" text="Fecha"/>
+			<s:Label x="273" y="383" fontSize="30" text="Fecha Limite"/>
+			<s:Label id="selCat" y="1" left="169" right="21" height="50" backgroundAlpha="0.8"
+					 backgroundColor="#FFFFFF" click="remC.findByType(tran.type)" color="#646464"
+					 fontSize="25" text="click para seleccionar " textAlign="center"
+					 verticalAlign="middle"/>
+			<s:TextInput id="tiCan" y="132" left="170" right="20" restrict="[0-9]."/>
+			<s:Label x="20" y="521" fontSize="30" text="Variacion"/>
+			<s:TextInput id="tiVar" y="511" left="170" right="20" enabled="false" restrict="[0-9]."
+						 text="0"/>
+			<s:TextInput id="tiDet" y="66" left="170" right="20"/>
+			<s:Label x="20" y="284" fontSize="30" fontWeight="bold" text="Tipo:"/>
+			<s:Label x="264" y="284" fontSize="30" fontWeight="bold" text="Realizado:"/>
+			<s:VGroup left="24" right="284" top="328" height="161">
+				<s:RadioButton id="tS" width="90%" label="Salida" color="#5A4B4B" fontSize="30" group="{type}"
+							   selected="true" value="0"/>
+				<s:RadioButton id="tE" width="90%" label="Entrada" color="#5A4B4B" fontSize="30" group="{type}"
+							   value="1"/>
+				<s:RadioButton id="tA" width="90%" label="Ahorro" color="#5A4B4B" fontSize="30" group="{type}"
+							   value="2"/>        
+			</s:VGroup>
+			
+			<s:Label id="selDate" y="198" left="170" right="20" height="50" alpha="0.5"
+					 backgroundAlpha="0.8" backgroundColor="#FFFFFF"
+					 click="popDate.ident = '', popDate.open(this)" color="#646464" fontSize="25"
+					 text="click para seleccionar " textAlign="center" verticalAlign="middle"/>
+			<s:Label id="selDateLim" y="419" left="273" right="20" height="62" backgroundAlpha="0.8"
+					 backgroundColor="#FFFFFF"
+					 click="{if(selDateLim.enabled){popDate.ident = 'lim', popDate.open(this)}}"
+					 color="#646464" fontSize="25" text="click para seleccionar " textAlign="center"
+					 verticalAlign="middle"/>
+			<s:ToggleSwitch x="277" y="321" width="220" change="toggleswitch_changeHandler(event)"
+							enabled="true" selected="false" id="tog"/>			
+			<s:TextArea x="20" y="609" width="477" id="taCom"/>	
+			
+		</s:Group>
+	</s:Scroller>
+	<s:Button id="btnProcess" x="32" bottom="10" width="477" height="60" label="Crear Transacción"
 			  click="process()" fontSize="25"/>
-	
-	<s:Label id="selDate" y="321" left="170" right="20" height="50" backgroundAlpha="0.8"
-			 backgroundColor="#FFFFFF" click="popDate.open(this)" color="#646464"
-			 fontSize="25" text="click para seleccionar " textAlign="center"
-			 verticalAlign="middle"/>
-	
-	<s:Label id="selCat" y="124" left="169" right="21" height="50" backgroundAlpha="0.8"
-			 backgroundColor="#FFFFFF" click="remC.findByType(tran.type)" color="#646464"
-			 fontSize="25" text="click para seleccionar " textAlign="center"
-			 verticalAlign="middle"/>
 	
 	<fx:Declarations>
 		<s:RadioButtonGroup id="type" itemClick="type_itemClickHandler(event)"/>
@@ -253,7 +349,7 @@
 			<s:method name="findByType" result="cat_resultHandler(event)" /> 
 		</s:RemoteObject>
 		
-		<s:RemoteObject id="rem" destination="zend" source="transactionC" fault="rem_faultHandler(event)" result="create_resultHandler(event)">
+		<s:RemoteObject id="rem" destination="zend" source="staticTransactionC" fault="rem_faultHandler(event)" result="create_resultHandler(event)">
 			<s:method name="create" /> 
 			<s:method name="update" /> 
 			<s:method name="remove" result="rmv_resultHandler(event)" />

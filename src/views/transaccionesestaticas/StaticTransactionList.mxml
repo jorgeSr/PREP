@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:View xmlns:fx="http://ns.adobe.com/mxml/2009" 
-		xmlns:s="library://ns.adobe.com/flex/spark" title="Categorias" 
-		initialize="catR.findAll()" xmlns:popups="views.popups.*">
+		xmlns:s="library://ns.adobe.com/flex/spark" title="Transacciones Estaticas" 
+		initialize="remT.findAll( Globals.periodo )" xmlns:popups="views.popups.*">
 	<fx:Script>
 		<![CDATA[
+			import as3.Globals;
+			
 			import mx.collections.ArrayCollection;
 			import mx.rpc.events.FaultEvent;
 			import mx.rpc.events.ResultEvent;
@@ -20,7 +22,7 @@
 					else
 					{
 						apop.title = "Alerta";
-						apop.content = "No ha creado ninguna categoria";
+						apop.content = "No ha creado ninguna transaccion";
 						apop.open(this);
 						navigator.popView();
 					}
@@ -28,13 +30,13 @@
 				else
 				{
 					apop.title = "Alerta";
-					apop.content = "No ha creado ninguna categoria";
+					apop.content = "No ha creado ninguna transaccion";
 					apop.open(this);
 					navigator.popView();
 				}
 			}
 			
-			protected function catR_faultHandler(event:FaultEvent):void
+			protected function rem_faultHandler(event:FaultEvent):void
 			{
 				apop.title = "Error";
 				apop.content = event.fault.faultString;
@@ -43,11 +45,14 @@
 			
 			protected function clickHandler(event:MouseEvent):void
 			{	
-				if( list.selectedIndex != -1 )
+				if( list.selectedItem != undefined )
 					switch( data.type )
 					{
 						//2 .- Editar
 						case 2: navigator.pushView( data.viewClass as Class , list.selectedItem );
+							break;
+						//2 .- Solo mostrar
+						case 3: 
 							break;
 					}
 			}
@@ -58,11 +63,11 @@
 	<fx:Declarations>
 		<popups:AlertPopUp id="apop" />
 		
-		<s:RemoteObject id="catR" destination="zend" source="categoryC" fault="catR_faultHandler(event)">
+		<s:RemoteObject id="remT" destination="zend" source="transactionC" fault="rem_faultHandler(event)">
 			<s:method name="findAll" result="initView(event)"/>
 		</s:RemoteObject>
 	</fx:Declarations>
 	
 	<s:List id="list" left="10" right="10" top="10" bottom="10" click="clickHandler(event)"
-			itemRenderer="views.categorias.CategoryItemRenderer"></s:List>
+			itemRenderer="views.transacciones.TransactionItemRenderer"></s:List>
 </s:View>
